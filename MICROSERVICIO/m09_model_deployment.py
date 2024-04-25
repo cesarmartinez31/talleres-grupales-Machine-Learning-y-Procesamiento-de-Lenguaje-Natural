@@ -2,43 +2,27 @@
 
 import pandas as pd
 import joblib
-import sys
 import os
 
-def predict_proba(url):
+# Cargar el modelo y el codificador
+model = joblib.load('model.pkl')
+encoder = joblib.load('encoder.pkl')
 
-    clf = joblib.load(os.path.dirname(__file__) + '/phishing_clf.pkl') 
+def predict_price(year, mileage, state, make, model_name):
+    # Crear un DataFrame con los datos de entrada
+    input_data = pd.DataFrame({
+        'Year': [year],
+        'Mileage': [mileage],
+        'State': [state],
+        'Make': [make],
+        'Model': [model_name]
+    })
 
-    url_ = pd.DataFrame([url], columns=['url'])
-  
-    # Create features
-    keywords = ['https', 'login', '.php', '.html', '@', 'sign']
-    for keyword in keywords:
-        url_['keyword_' + keyword] = url_.url.str.contains(keyword).astype(int)
+    # Codificar las características categóricas
+    input_data_encoded = encoder.transform(input_data)
 
-    url_['lenght'] = url_.url.str.len() - 2
-    domain = url_.url.str.split('/', expand=True).iloc[:, 2]
-    url_['lenght_domain'] = domain.str.len()
-    url_['isIP'] = (url_.url.str.replace('.', '') * 1).str.isnumeric().astype(int)
-    url_['count_com'] = url_.url.str.count('com')
-
-    # Make prediction
-    p1 = clf.predict_proba(url_.drop('url', axis=1))[0,1]
-
-    return p1
-
-
-if __name__ == "__main__":
+    # Predecir el precio del automóvil
+    price = model.predict(input_data_encoded)[0]
     
-    if len(sys.argv) == 1:
-        print('Please add an URL')
-        
-    else:
-
-        url = sys.argv[1]
-
-        p1 = predict_proba(url)
-        
-        print(url)
-        print('Probability of Phishing: ', p1)
+    return price
         
