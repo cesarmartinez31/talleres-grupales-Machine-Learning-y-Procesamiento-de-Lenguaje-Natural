@@ -25,7 +25,7 @@ resource_fields = api.model('Resource', {
 @ns.route('/')
 class MovieGenrePrediction(Resource):
 
-    @api.expect(api.parser().add_argument('plot', type=str, required=True, help='Sinopsis de la película', location='args'))
+    @api.doc(params={'plot': 'Sinopsis de la película'})
     @api.marshal_with(resource_fields)
     def get(self):
         plot = request.args.get('plot', '')
