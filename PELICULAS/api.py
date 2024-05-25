@@ -3,39 +3,62 @@ from flask import Flask, request
 from flask_restx import Api, Resource, fields
 import pandas as pd
 import joblib
+from movie_model_deployment import predict_rating
 from flask_cors import CORS
-from m09_model_deployment import predict_genre
 
 app = Flask(__name__)
-CORS(app)  # Habilitar CORS para todas las rutas y orígenes
+CORS(app)
 
 api = Api(
     app, 
     version='1.0', 
-    title='Movie Genre Prediction API',
-    description='API para predecir los géneros de una película dada su sinopsis')
+    title='Movie Rating Prediction API',
+    description='API to predict movie ratings')
 
 ns = api.namespace('predict', 
-     description='Predicción de géneros de películas')
+    description='Movie Rating Predictor')
+
+parser = api.parser()
+parser.add_argument(
+    'Year', 
+    type=int, 
+    required=True, 
+    help='Release year of the movie', 
+    location='args')
+parser.add_argument(
+    'Genre', 
+    type=str, 
+    required=True, 
+    help='Genre of the movie', 
+    location='args')
+parser.add_argument(
+    'Director', 
+    type=str, 
+    required=True, 
+    help='Director of the movie', 
+    location='args')
 
 resource_fields = api.model('Resource', {
-    'result': fields.Raw,
+    'result': fields.Float,
 })
 
 @ns.route('/')
-class MovieGenrePrediction(Resource):
+class MovieRatingPredictor(Resource):
 
-    @api.doc(params={'plot': 'Sinopsis de la película'})
+    @api.doc(parser=parser)
     @api.marshal_with(resource_fields)
     def get(self):
-        plot = request.args.get('plot', '')
+        args = parser.parse_args()
+        year = args['Year']
+        genre = args['Genre']
+        director = args['Director']
         
-        # Predecir los géneros de la película utilizando la función del archivo m09_model_deployment.py
-        genre_probabilities = predict_genre(plot)
+        # Predecir la calificación de la película
+        rating = predict_rating(year, genre, director)
         
         return {
-            'result': genre_probabilities
+            "result": rating
         }, 200
-    
+
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
