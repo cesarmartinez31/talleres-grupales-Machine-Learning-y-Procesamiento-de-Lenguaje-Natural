@@ -3,7 +3,7 @@ from flask import Flask, request
 from flask_restx import Api, Resource, fields
 import pandas as pd
 import joblib
-from movie_model_deployment import predict_rating
+from m09_model_deployment import predict_rating
 from flask_cors import CORS
 
 app = Flask(__name__)
