@@ -17,6 +17,7 @@ api = Api(
 
 ns = api.namespace('predict', 
     description='Movie Rating Predictor')
+genres = ['Comedia', 'Acción', 'Terror', 'Drama', 'Ciencia ficción', 'Romance', 'Aventura', 'Suspenso', 'Animación', 'Documental']
 
 parser = api.parser()
 parser.add_argument(
@@ -30,8 +31,8 @@ parser.add_argument(
     type=str, 
     required=True, 
     help='Genre of the movie',
-    action='append',  # Esto permite recibir una lista de géneros
-    location='args')
+    location='args',
+    choices=genres)
 parser.add_argument(
     'Director', 
     type=str, 
