@@ -3,7 +3,7 @@ from flask import Flask, request
 from flask_restx import Api, Resource, fields
 import pandas as pd
 import joblib
-from m09_model_deployment import predict_rating
+from m09_model_deployment import predict_genres
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -12,11 +12,11 @@ CORS(app)
 api = Api(
     app, 
     version='1.0', 
-    title='Movie Rating Prediction API',
-    description='API to predict movie ratings')
+    title='Movie Genre Prediction API',
+    description='API to predict movie genres')
 
 ns = api.namespace('predict', 
-    description='Movie Rating Predictor')
+    description='Movie Genre Predictor')
 genres = ['Comedia', 'Acción', 'Terror', 'Drama', 'Ciencia ficción', 'Romance', 'Aventura', 'Suspenso', 'Animación', 'Documental']
 # Definir el parser para los argumentos
 parser = api.parser()
@@ -45,7 +45,7 @@ resource_fields = api.model('Resource', {
 })
 
 @ns.route('/')
-class MovieRatingPredictor(Resource):
+class MovieGenrePredictor(Resource):
 
     @api.doc(parser=parser)
     @api.marshal_with(resource_fields)
@@ -55,8 +55,8 @@ class MovieRatingPredictor(Resource):
         genre = args['Genre']
         director = args['Director']
         
-        # Predecir la calificación de la película
-        predicted_genres = predict_rating(year, genre, director)
+        # Predecir los géneros de la película
+        predicted_genres = predict_genres(year, genre, director)
         
         return {
             "result": predicted_genres
