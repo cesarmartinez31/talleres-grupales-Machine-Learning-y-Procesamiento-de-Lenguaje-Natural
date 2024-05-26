@@ -41,7 +41,7 @@ parser.add_argument(
     location='args')
 
 resource_fields = api.model('Resource', {
-    'result': fields.Float,
+    'result': fields.List(fields.String),  # Cambiar a una lista de cadenas
 })
 
 @ns.route('/')
@@ -55,10 +55,8 @@ class MovieRatingPredictor(Resource):
         genre = args['Genre']
         director = args['Director']
 
-        print(f'Year: {year}, Gender: {genre}, Director: {director}')
-        
         # Predecir la calificación de la película
-        rating = predict_rating(year, genre, director)
+        predicted_genres = predict_rating(year, genre, director)
         
         return {
             "result": rating
