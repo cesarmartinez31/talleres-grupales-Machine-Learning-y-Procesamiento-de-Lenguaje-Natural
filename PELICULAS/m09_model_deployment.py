@@ -19,5 +19,5 @@ def predict_rating(year, genre, director):
     input_data_encoded = vectorizer.transform(input_data)
 
     # Predecir la calificación de la película
-    rating = model.predict(input_data_encoded)[0]  # Obtener el primer elemento del array
-    return rating
+    rating = model.predict(input_data_encoded)
+     return predicted_genres.tolist()
