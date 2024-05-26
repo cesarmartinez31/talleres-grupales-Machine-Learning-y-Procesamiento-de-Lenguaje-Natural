@@ -29,7 +29,8 @@ parser.add_argument(
     'Genre', 
     type=str, 
     required=True, 
-    help='Genre of the movie', 
+    help='Genre of the movie',
+    action='append',  # Esto permite recibir una lista de géneros
     location='args')
 parser.add_argument(
     'Director', 
