@@ -7,7 +7,7 @@ import joblib
 model = joblib.load('model.pkl')
 vectorizer = joblib.load('vectorizer.pkl')
 
-def predict_rating(year, genre, director):
+def predict_genres(year, genre, director):
     # Crear un DataFrame con los datos de entrada
     input_data = pd.DataFrame({
         'Year': [year],
@@ -18,7 +18,7 @@ def predict_rating(year, genre, director):
     # Vectorizar las características categóricas
     input_data_encoded = vectorizer.transform(input_data)
 
-    # Predecir la calificación de la película
-    predicted_genres = model.predict(input_data_encoded)  # Obtener la lista de géneros predichos
+    # Predecir los géneros de la película
+    predicted_genres = model.predict(input_data_encoded)  # Suponiendo que el modelo predice géneros
     
     return predicted_genres.tolist()  # Convertir a lista de Python
