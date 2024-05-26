@@ -18,7 +18,7 @@ api = Api(
 ns = api.namespace('predict', 
     description='Movie Rating Predictor')
 genres = ['Comedia', 'Acción', 'Terror', 'Drama', 'Ciencia ficción', 'Romance', 'Aventura', 'Suspenso', 'Animación', 'Documental']
-
+# Definir el parser para los argumentos
 parser = api.parser()
 parser.add_argument(
     'Year', 
@@ -30,7 +30,7 @@ parser.add_argument(
     'Genre', 
     type=str, 
     required=True, 
-    help='Genre of the movie',
+    help='Genre of the movie', 
     location='args',
     choices=genres)
 parser.add_argument(
@@ -54,12 +54,12 @@ class MovieRatingPredictor(Resource):
         year = args['Year']
         genre = args['Genre']
         director = args['Director']
-
+        
         # Predecir la calificación de la película
         predicted_genres = predict_rating(year, genre, director)
         
         return {
-            "result": rating
+            "result": predicted_genres
         }, 200
 
 if __name__ == '__main__':
