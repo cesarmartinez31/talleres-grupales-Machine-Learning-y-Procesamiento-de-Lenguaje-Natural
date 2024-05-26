@@ -52,6 +52,8 @@ class MovieRatingPredictor(Resource):
         year = args['Year']
         genre = args['Genre']
         director = args['Director']
+
+        print(f'Year: {year}, Gender: {genre}, Director: {director}')
         
         # Predecir la calificación de la película
         rating = predict_rating(year, genre, director)
